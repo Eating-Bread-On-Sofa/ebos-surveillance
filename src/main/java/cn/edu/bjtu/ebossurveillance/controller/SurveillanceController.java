@@ -4,12 +4,11 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import cn.edu.bjtu.ebossurveillance.service.MqService;
 import cn.edu.bjtu.ebossurveillance.service.SurveillanceService;
-import cn.edu.bjtu.ebossurveillance.util.LayuiTableResultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 
-@RequestMapping("/api")
+@RequestMapping("/api/surveillance")
 @RestController
 public class SurveillanceController {
     @Autowired
@@ -41,13 +40,13 @@ public class SurveillanceController {
         return "向"+destination+"发送"+jsonObject;
     }
 
-    @GetMapping("/surnum")
+    @GetMapping("/onlinenum")
     @ResponseBody
     public int getSurNum(){
         return surveillanceService.getOnlineDevices().size();
     }
 
-    @GetMapping("/surid")
+    @GetMapping("/onlineid")
     @ResponseBody
     public JSONArray getId(){
         return surveillanceService.getOnlineDevices();
@@ -59,39 +58,9 @@ public class SurveillanceController {
         return surveillanceService.getTotalNum();
     }
 
-    @GetMapping("/surdetails")
+    @GetMapping("/{id}")
     @ResponseBody
-    public JSONObject getDetails(@RequestParam String id){
+    public JSONObject getDetails(@PathVariable String id){
         return surveillanceService.getDeviceDetail(id);
     }
-
-    @GetMapping("/expiringnum")
-    @ResponseBody
-    public int getExpiringNum(){
-        return surveillanceService.getExpiringDevice().size();
-    }
-
-    @GetMapping("/expiringdetails")
-    @ResponseBody
-    public LayuiTableResultUtil getExpiring(@RequestParam Integer page, @RequestParam Integer limit){
-        LayuiTableResultUtil<JSONArray> table = new LayuiTableResultUtil<>("",surveillanceService.getExpiringDevice(),0,surveillanceService.getExpiringDevice().size());
-        return table;
-    }
-
-    @GetMapping("/regnum")
-    @ResponseBody
-    public int getRegNum(){
-        return surveillanceService.getRegNum();
-    }
-
-    @GetMapping("/regdetails")
-    @ResponseBody
-    public LayuiTableResultUtil<JSONArray> getReg(@RequestParam Integer page, @RequestParam Integer limit){
-        LayuiTableResultUtil<JSONArray> table = new LayuiTableResultUtil<>("",surveillanceService.getRegDevice(),0,surveillanceService.getRegDevice().size());
-        return table;
-    }
-
-    @GetMapping("/agedis")
-    @ResponseBody
-    public JSONObject getAgeDistribution(){        return surveillanceService.getAge();}
 }

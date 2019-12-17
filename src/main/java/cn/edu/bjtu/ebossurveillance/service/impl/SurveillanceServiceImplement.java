@@ -10,10 +10,10 @@ import org.springframework.web.client.RestTemplate;
 
 @Service
 public class SurveillanceServiceImplement implements SurveillanceService{
-    @Autowired
-    private RestTemplate restTemplate;
     @Value("${server.edgex}")
     private String ip;
+    @Autowired
+    RestTemplate restTemplate;
 
     @Override
     public JSONArray getOnlineDevices(){
