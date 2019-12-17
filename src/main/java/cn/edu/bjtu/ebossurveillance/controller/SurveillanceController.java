@@ -17,7 +17,6 @@ public class SurveillanceController {
     MqService mqService;
 
     @GetMapping("/commandtest")
-    @ResponseBody
     public String commandTest(){
         JSONObject command = new JSONObject();
         command.put("name","name1");
@@ -34,32 +33,31 @@ public class SurveillanceController {
     }
 
     @GetMapping("/mqtest/{destination}")
-    @ResponseBody
     public String mqTest(@PathVariable String destination, @RequestBody JSONObject jsonObject){
         mqService.publish(destination,jsonObject);
         return "向"+destination+"发送"+jsonObject;
     }
 
+    @CrossOrigin
     @GetMapping("/onlinenum")
-    @ResponseBody
     public int getSurNum(){
         return surveillanceService.getOnlineDevices().size();
     }
 
+    @CrossOrigin
     @GetMapping("/onlineid")
-    @ResponseBody
     public JSONArray getId(){
         return surveillanceService.getOnlineDevices();
     }
 
+    @CrossOrigin
     @GetMapping("/totalnum")
-    @ResponseBody
     public int getTotalNum(){
         return surveillanceService.getTotalNum();
     }
 
+    @CrossOrigin
     @GetMapping("/{id}")
-    @ResponseBody
     public JSONObject getDetails(@PathVariable String id){
         return surveillanceService.getDeviceDetail(id);
     }
