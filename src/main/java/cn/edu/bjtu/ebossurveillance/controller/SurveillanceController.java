@@ -1,8 +1,9 @@
 package cn.edu.bjtu.ebossurveillance.controller;
 
+import cn.edu.bjtu.ebossurveillance.service.MqFactory;
+import cn.edu.bjtu.ebossurveillance.service.MqProducer;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import cn.edu.bjtu.ebossurveillance.service.MqService;
 import cn.edu.bjtu.ebossurveillance.service.SurveillanceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -14,10 +15,11 @@ public class SurveillanceController {
     @Autowired
     SurveillanceService surveillanceService;
     @Autowired
-    MqService mqService;
+    MqFactory mqFactory;
 
     @GetMapping("/commandtest")
     public String commandTest(){
+        MqProducer mqProducer = mqFactory.createProducer();
         JSONObject command = new JSONObject();
         command.put("name","name1");
         command.put("commandId","cid");
@@ -27,14 +29,14 @@ public class SurveillanceController {
         command.put("deviceName","dn");
         command.put("jsonObject","jo");
         command.put("jsonArray","ja");
-        mqService.publish("run.command",command);
-        mqService.publish("test2",command);
+        mqProducer.publish("run.command",command.toString());
+        mqProducer.publish("test2",command.toString());
         return "提交发送";
     }
 
     @GetMapping("/mqtest/{destination}")
     public String mqTest(@PathVariable String destination, @RequestBody JSONObject jsonObject){
-        mqService.publish(destination,jsonObject);
+        mqFactory.createProducer().publish(destination,jsonObject.toString());
         return "向"+destination+"发送"+jsonObject;
     }
 
