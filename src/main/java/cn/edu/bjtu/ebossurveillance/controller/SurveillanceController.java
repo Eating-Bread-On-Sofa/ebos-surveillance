@@ -1,10 +1,10 @@
 package cn.edu.bjtu.ebossurveillance.controller;
 
-import cn.edu.bjtu.ebossurveillance.service.MqFactory;
-import cn.edu.bjtu.ebossurveillance.service.MqProducer;
+import cn.edu.bjtu.ebossurveillance.service.*;
+import cn.edu.bjtu.ebossurveillance.service.impl.LogFindImpl;
+import cn.edu.bjtu.ebossurveillance.service.impl.log.LogImpl;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import cn.edu.bjtu.ebossurveillance.service.SurveillanceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +16,10 @@ public class SurveillanceController {
     SurveillanceService surveillanceService;
     @Autowired
     MqFactory mqFactory;
+    @Autowired
+    Log log = new LogImpl();
+    @Autowired
+    LogFind logFind = new LogFindImpl();
 
     @GetMapping("/commandtest")
     public String commandTest(){
@@ -62,5 +66,17 @@ public class SurveillanceController {
     @GetMapping("/{id}")
     public JSONObject getDetails(@PathVariable String id){
         return surveillanceService.getDeviceDetail(id);
+    }
+
+    @CrossOrigin
+    @RequestMapping ("/logtest")
+    public String logtest1(){
+        log.info("surveillance");
+        return "成功";
+    }
+    @CrossOrigin
+    @GetMapping("/logtest")
+    public String logtest2(){
+        return logFind.read("level","INFO");
     }
 }
